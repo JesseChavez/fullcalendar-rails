@@ -730,7 +730,7 @@ function hasOwnProp(obj, name) {
 }
 exports.hasOwnProp = hasOwnProp;
 function applyAll(functions, thisObj, args) {
-    if ($.isFunction(functions)) {
+    if (typeof functions === 'function') {
         functions = [functions];
     }
     if (functions) {
@@ -1133,7 +1133,7 @@ var EventSource = /** @class */ (function (_super) {
             this.id = EventSource.normalizeId(rawProps.id);
         }
         // TODO: converge with EventDef
-        if ($.isArray(rawProps.className)) {
+        if (Array.isArray(rawProps.className)) {
             this.className = rawProps.className;
         }
         else if (typeof rawProps.className === 'string') {
@@ -1330,7 +1330,7 @@ function makeMoment(args, parseAsUTC, parseZone) {
                 isAmbigZone = true;
             }
         }
-        else if ($.isArray(input)) {
+        else if (Array.isArray(input)) {
             // arrays have no timezone information, so assume ambiguous zone
             isAmbigZone = true;
         }
@@ -2925,7 +2925,7 @@ var EventDef = /** @class */ (function () {
             this.uid = EventDef.generateId();
         }
         // TODO: converge with EventSource
-        if ($.isArray(rawProps.className)) {
+        if (Array.isArray(rawProps.className)) {
             this.className = rawProps.className;
         }
         if (typeof rawProps.className === 'string') {
@@ -8211,7 +8211,7 @@ var BusinessHourGenerator = /** @class */ (function () {
         else if ($.isPlainObject(rawComplexDef)) {
             rawDefs = [rawComplexDef];
         }
-        else if ($.isArray(rawComplexDef)) {
+        else if (Array.isArray(rawComplexDef)) {
             rawDefs = rawComplexDef;
             requireDow = true; // every sub-definition NEEDS a day-of-week
         }
@@ -8438,7 +8438,7 @@ var JsonFeedEventSource = /** @class */ (function (_super) {
                     _this.calendar.popLoading();
                     if (rawEventDefs) {
                         callbackRes = util_1.applyAll(onSuccess, _this, [rawEventDefs, status, xhr]); // redirect `this`
-                        if ($.isArray(callbackRes)) {
+                        if (Array.isArray(callbackRes)) {
                             rawEventDefs = callbackRes;
                         }
                         onResolve(_this.parseEventDefs(rawEventDefs));
@@ -8476,7 +8476,7 @@ var JsonFeedEventSource = /** @class */ (function (_super) {
             timezoneParam = calendar.opt('timezoneParam');
         }
         // retrieve any outbound GET/POST $.ajax data from the options
-        if ($.isFunction(ajaxSettings.data)) {
+        if (typeof ajaxSettings.data === 'function') {
             // supplied as a function that returns a key/value object
             customRequestParams = ajaxSettings.data();
         }
@@ -9338,7 +9338,7 @@ var Calendar = /** @class */ (function () {
             context = triggerInfo.context;
             args = triggerInfo.args;
         }
-        else if ($.isArray(triggerInfo)) {
+        else if (Array.isArray(triggerInfo)) {
             args = triggerInfo;
         }
         if (context == null) {
@@ -9552,7 +9552,7 @@ var Calendar = /** @class */ (function () {
         this.renderFooter();
         this.renderView(this.opt('defaultView'));
         if (this.opt('handleWindowResize')) {
-            $(window).resize(this.windowResizeProxy = util_1.debounce(// prevents rapid calls
+            $(window).on('resize', this.windowResizeProxy = util_1.debounce(// prevents rapid calls
             this.windowResize.bind(this), this.opt('windowResizeDelay')));
         }
     };
@@ -11723,7 +11723,7 @@ var TimeGrid = /** @class */ (function (_super) {
         // might be an array value (for TimelineView).
         // if so, getting the most granular entry (the last one probably).
         input = this.opt('slotLabelFormat');
-        if ($.isArray(input)) {
+        if (Array.isArray(input)) {
             input = input[input.length - 1];
         }
         this.labelFormat = input ||
@@ -12634,7 +12634,7 @@ var Toolbar = /** @class */ (function () {
                             '<button type="button" class="' + buttonClasses.join(' ') + '"' +
                                 buttonAriaAttr +
                                 '>' + buttonInnerHtml + '</button>')
-                                .click(function (ev) {
+                                .on('click', function (ev) {
                                 // don't process clicks for disabled buttons
                                 if (!buttonEl.hasClass(theme.getClass('stateDisabled'))) {
                                     buttonClick(ev);
@@ -12646,7 +12646,7 @@ var Toolbar = /** @class */ (function () {
                                     }
                                 }
                             })
-                                .mousedown(function () {
+                                .on('mousedown', function () {
                                 // the *down* effect (mouse pressed in).
                                 // only on buttons that are not the "active" tab, or disabled
                                 buttonEl
@@ -12654,18 +12654,19 @@ var Toolbar = /** @class */ (function () {
                                     .not('.' + theme.getClass('stateDisabled'))
                                     .addClass(theme.getClass('stateDown'));
                             })
-                                .mouseup(function () {
+                                .on('mouseup', function () {
                                 // undo the *down* effect
                                 buttonEl.removeClass(theme.getClass('stateDown'));
                             })
-                                .hover(function () {
+                                .on('mouseenter', function () {
                                 // the *hover* effect.
                                 // only on buttons that are not the "active" tab, or disabled
                                 buttonEl
                                     .not('.' + theme.getClass('stateActive'))
                                     .not('.' + theme.getClass('stateDisabled'))
                                     .addClass(theme.getClass('stateHover'));
-                            }, function () {
+                            })
+                                .on('mouseleave', function () {
                                 // undo the *hover* effect
                                 buttonEl
                                     .removeClass(theme.getClass('stateHover'))
