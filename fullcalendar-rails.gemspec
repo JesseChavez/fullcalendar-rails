@@ -8,6 +8,8 @@ Gem::Specification.new do |gem|
   gem.summary       = %q{A simple asset pipeline bundling for Ruby on Rails of the FullCalendar jQuery plugin.}
   gem.homepage      = 'https://github.com/bokmann/fullcalendar-rails'
 
+  gem.metadata['allowed_push_host'] = 'http://gems.ibsa.vlan:8808'
+
   gem.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
